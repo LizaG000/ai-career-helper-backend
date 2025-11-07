@@ -6,6 +6,7 @@ from sqlalchemy import Boolean
 from sqlalchemy import Integer
 from sqlalchemy import DateTime
 from sqlalchemy import func
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from typing import Annotated
 
@@ -71,5 +72,28 @@ class UserModel(BaseDBModel):
         nullable=False
     )
     
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+
+class InformationsModel(BaseDBModel):
+    __tablename__ = 'informations'
+    id: Mapped[uuid_pk]
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+
+class CardsModel(BaseDBModel):
+    __tablename__ = 'informations'
+    id: Mapped[uuid_pk]
+    information_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        ForeignKey('db_schema.informations.id'),
+        nullable=False,
+    )
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
