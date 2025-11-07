@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import UUID
 from sqlalchemy import String
+from sqlalchemy import Boolean
 from sqlalchemy import Integer
 from sqlalchemy import DateTime
 from sqlalchemy import func
@@ -53,21 +54,22 @@ class UserModel(BaseDBModel):
         String(255),
         nullable=False,
     )
-    age: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True
-    )
-    phone: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
     email: Mapped[str] = mapped_column(
         String(200),
         nullable=False
     )
-    password: Mapped[str] = mapped_column(
-        String(200),
+    first_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    corporate_account_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        nullable=True
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
         nullable=False
     )
+    
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
