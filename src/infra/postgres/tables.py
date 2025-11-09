@@ -216,7 +216,6 @@ class RoadMapStepsModel(BaseDBModel):
     updated_at: Mapped[updated_at]
     '''timestamp'''
 
-    
 
 
 class InformationsModel(BaseDBModel):
@@ -231,12 +230,89 @@ class InformationsModel(BaseDBModel):
 
 
 class CardsModel(BaseDBModel):
-    __tablename__ = 'informations'
+    __tablename__ = 'cards'
     id: Mapped[uuid_pk]
     information_id: Mapped[uuid.UUID] = mapped_column(
         UUID,
         ForeignKey('db_schema.informations.id'),
         nullable=False,
+    )
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+
+class FavoritesModel(BaseDBModel):
+    __tablename__ = 'favorites'
+    id: Mapped[uuid_pk] = mapped_column(
+        UUID,
+        nullable=False
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey('db_schema.users.id'),
+        nullable=False
+    )
+    card_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey('db_schema.cards.id'),
+        nullable=False
+    )
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+
+class ChatsModel(BaseDBModel):
+    __tablename__ = 'chats'
+    id: Mapped[uuid_pk] 
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey('db_schema.users.id'),
+        nullable=False
+    )
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+    start_time: Mapped[datetime] = mapped_column(
+        DateTime,  
+        nullable=False
+    )
+    last_activity_time: Mapped[datetime] = mapped_column(  
+        DateTime,
+        nullable=False
+    )
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+
+class MessagesModel(BaseDBModel):
+    __tablename__ = 'messages'
+    id: Mapped[uuid_pk]  
+    chat_id: Mapped[uuid.UUID] = mapped_column(  
+        ForeignKey('db_schema.chats.id'),
+        nullable=False
+    )
+    message_text: Mapped[str] = mapped_column(  
+        Text,
+        nullable=False
+    )
+    sender_type_id: Mapped[uuid.UUID] = mapped_column(  
+        ForeignKey('db_schema.sender_types.id'),
+        nullable=False
+    )
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False
+    )
+    token_id: Mapped[int] = mapped_column(  
+        nullable=True  
+    )
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+class SenderTypesModel(BaseDBModel):  
+    __tablename__ = 'sender_types'
+    id: Mapped[uuid_pk]
+    name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
     )
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
