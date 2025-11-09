@@ -75,6 +75,149 @@ class UserModel(BaseDBModel):
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
+class UserCareersModel(BaseDBModel):
+    __tablename__ = 'user_careers'
+    id: Mapped[uuid_pk]
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        nullable=False,
+    )
+    specialization_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        nullable=False
+    )
+    experience_level: Mapped[enumerate] = mapped_column(
+        enum,
+        nullable=False
+    )
+    skills: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    career_goal: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+    '''timestamp'''
+
+class UserResumeModel(BaseDBModel):
+    __tablename__ = 'user_resume'
+    id: Mapped[uuid_pk]
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        nullable=False,
+    )
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    work_experience: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+    skills: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    recomendations: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+
+class SpecializationsModel(BaseDBModel):
+    __tablename__ = 'specializations'
+    id: Mapped[uuid_pk]
+    name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+    '''timestamp'''
+
+class RoadmapsModel(BaseDBModel):
+    __tablename__ = 'roadmaps'
+    id: Mapped[uuid_pk]
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        nullable=False,
+    )
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    description: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    status: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+    '''timestamp
+    start_date: Mapped[start_date]
+    estmated_end_date: Mapped[estmated_end_date]
+    DATE'''
+
+class RoadmapStatusModel(BaseDBModel):
+    __tablename__ = 'roadmap_status'
+    id: Mapped[uuid_pk]
+    is_completed: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+    )
+    
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+    '''timestamp'''
+
+class RoadMapStepsModel(BaseDBModel):
+    __tablename__ = 'roadmapsteps'
+    id: Mapped[uuid_pk]
+    roadmap_id: Mapped[uuid.UUID] = mapped_column(
+        UUID,
+        nullable=False,
+    )
+    step_number: Mapped[int] = mapped_column(
+        int,
+        nullable=False,
+    )
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    description: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    materials: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    deadline: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+    is_completed: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+    )
+
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
+    '''timestamp'''
+
+    
+
 
 class InformationsModel(BaseDBModel):
     __tablename__ = 'informations'
