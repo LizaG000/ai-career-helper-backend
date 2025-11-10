@@ -4,6 +4,7 @@ from sqlalchemy import UUID
 from sqlalchemy import String
 from sqlalchemy import Boolean
 from sqlalchemy import Integer
+from sqlalchemy import Text
 from sqlalchemy import DateTime
 from sqlalchemy import func
 from sqlalchemy import ForeignKey
@@ -51,10 +52,6 @@ class BaseDBModel(DeclarativeBase):
 class UserModel(BaseDBModel):
     __tablename__ = 'users'
     id: Mapped[uuid_pk]
-    name: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-    )
     email: Mapped[str] = mapped_column(
         String(200),
         nullable=False
@@ -86,8 +83,8 @@ class UserCareersModel(BaseDBModel):
         UUID,
         nullable=False
     )
-    experience_level: Mapped[enumerate] = mapped_column(
-        enum,
+    experience_level: Mapped[str] = mapped_column(
+        String(255),
         nullable=False
     )
     skills: Mapped[str] = mapped_column(
@@ -101,7 +98,6 @@ class UserCareersModel(BaseDBModel):
     
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
-    '''timestamp'''
 
 class UserResumeModel(BaseDBModel):
     __tablename__ = 'user_resume'
@@ -123,7 +119,7 @@ class UserResumeModel(BaseDBModel):
         nullable=False,
     )
     recomendations: Mapped[str] = mapped_column(
-        String(255),
+        Text,
         nullable=True,
     )
     created_at: Mapped[created_at]
@@ -153,7 +149,7 @@ class RoadmapsModel(BaseDBModel):
         nullable=False,
     )
     description: Mapped[str] = mapped_column(
-        String(255),
+        Text,
         nullable=False,
     )
     status: Mapped[str] = mapped_column(
@@ -175,7 +171,6 @@ class RoadmapStatusModel(BaseDBModel):
         Boolean,
         nullable=False,
     )
-    
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
     '''timestamp'''
@@ -188,7 +183,7 @@ class RoadMapStepsModel(BaseDBModel):
         nullable=False,
     )
     step_number: Mapped[int] = mapped_column(
-        int,
+        Integer,
         nullable=False,
     )
     title: Mapped[str] = mapped_column(
