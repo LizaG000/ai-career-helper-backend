@@ -23,10 +23,18 @@ class DatabaseConfig(BaseSchema):
     def dsn(self, db = True) -> str:
         return f'{self.driver}://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}'
 
+class RedisConfig(BaseSchema):
+    host: str = 'localhost'
+    port: int = 6379
+    password: str | None = None
+    db: int = 0
+    decode_responses: bool = True
+
 class Config(BaseSchema):
     model_config = ConfigDict(extra='allow', from_attributes=True)
     api: ApiConfig
     database: DatabaseConfig
+    redis: RedisConfig | None = None
 
 
 def get_config() -> Config:
