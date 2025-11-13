@@ -7,5 +7,11 @@ class CardSchema(BaseModel):
     information_id: UUID
     title: str
     description: str
+    updated_at: datetime
     created_at: datetime
+
+class UpdateCardSchema(BaseModel):
+    information_id: UUID
+    title: str
+    description: str
     updated_at: datetime

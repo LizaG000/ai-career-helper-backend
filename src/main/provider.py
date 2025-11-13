@@ -11,6 +11,7 @@ from src.config import DatabaseConfig
 
 from src.usecase.users.create import CreateUserUsecase
 from src.usecase.cards.delete import DeleteCardUsecase
+from src.usecase.cards.update import UpdateCardUsecase
 
 class MainProvider(Provider):
     scope = Scope.REQUEST
@@ -30,5 +31,6 @@ class MainProvider(Provider):
     _get_usecases = provide_all(
         CreateUserUsecase,
         DeleteCardUsecase,
+        UpdateCardUsecase,
     )
 
