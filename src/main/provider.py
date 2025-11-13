@@ -8,6 +8,7 @@ from fastapi import Request
 from src.config import Config
 from src.config import ApiConfig
 from src.config import DatabaseConfig
+from src.config import RedisConfig
 
 from src.usecase.users.create import CreateUserUsecase
 from src.usecase.cards.delete import DeleteCardUsecase
@@ -25,6 +26,10 @@ class MainProvider(Provider):
     @provide(scope=Scope.APP)
     async def _get_database_config(self, config: Config) -> DatabaseConfig:
         return config.database
+    
+    @provide(scope=Scope.APP)
+    async def _get_redis_config(self, config: Config) -> RedisConfig | None:
+        return config.redis
 
     _request = from_context(provides=Request, scope=Scope.REQUEST)
 
