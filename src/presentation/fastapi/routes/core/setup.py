@@ -8,5 +8,5 @@ def setup_core_router() -> APIRouter:
     router = APIRouter(route_class=DishkaRoute)
 
     router.include_router(prefix='/user', router=USER_ROUTER)
-    router.include_router(prefix='/card', router=CARD_ROUTER)
+    router.include_router(prefix='/cards', router=CARD_ROUTER)
     return router
