@@ -3,10 +3,12 @@ from fastapi import APIRouter
 
 from src.presentation.fastapi.routes.core.users.api import ROUTER as USER_ROUTER
 from src.presentation.fastapi.routes.core.cards.api import ROUTER as CARD_ROUTER
+from src.presentation.fastapi.routes.core.user_careers.api import ROUTER as USER_CAREER_ROUTER
 
 def setup_core_router() -> APIRouter:
     router = APIRouter(route_class=DishkaRoute)
 
     router.include_router(prefix='/user', router=USER_ROUTER)
     router.include_router(prefix='/cards', router=CARD_ROUTER)
+    router.include_router(prefix='/user_careers', router=USER_CAREER_ROUTER)
     return router
