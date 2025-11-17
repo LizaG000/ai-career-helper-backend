@@ -15,3 +15,11 @@ class UpdateCardSchema(BaseModel):
     title: str
     description: str
     updated_at: datetime
+
+class CreateCardSchema(BaseModel):
+    information_id: UUID
+    title: str
+    description: str
+
+class CreateCardsSchema(BaseModel):
+    cards: list[CreateCardSchema]
