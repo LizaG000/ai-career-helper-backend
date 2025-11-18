@@ -17,9 +17,11 @@ class UpdateCardSchema(BaseModel):
     updated_at: datetime
 
 class CreateCardSchema(BaseModel):
-    information_id: UUID
+    information_title: str
     title: str
     description: str
 
-class CreateCardsSchema(BaseModel):
-    cards: list[CreateCardSchema]
+class CreateCardDBSchema(BaseModel):
+    information_id: UUID
+    title: str
+    description: str
