@@ -8,6 +8,13 @@ from src.infra.postgres.tables import BaseDBModel
 from sqlalchemy import Select
 from sqlalchemy.sql.dml import ReturningInsert, ReturningUpdate
 from typing import TypeVar, Generic, Type
+from src.application.errors import (
+    DatabaseCreateError,
+    DatabaseUpdateError,
+    DatabaseDeleteError,
+    NotFoundError,
+)
+
 TAppliable = Select | ReturningInsert | ReturningUpdate
 
 TTable = TypeVar('TTable', bound=BaseDBModel)
@@ -19,6 +26,18 @@ TEntityId = TypeVar('TEntityId', bound=UUID)
 @dataclass(slots=True, kw_only=True)
 class PostgresGateway:
     session: AsyncSession
+
+@dataclass(slots=True, kw_only=True)
+class GetAllGate(Generic[TTable, TEntity], PostgresGateway):
+    table: Type[TTable]
+    schema_type: Type[TEntity]
+
+    async def __call__(self) -> list[TEntity] | list[None]:
+        stmt = Select(*self.table.group_by_fields())
+        results = (await self.session.execute(stmt)).mappings().fetchall()
+        if results == []:
+            return  results
+        return [self.schema_type.model_validate(result) for result in results]
 
 @dataclass(slots=True, kw_only=True)
 class GetAllByIdUserGate(Generic[TTable, TEntity, TEntityId], PostgresGateway):

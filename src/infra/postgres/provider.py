@@ -12,6 +12,7 @@ from src.infra.postgres.gateways.base import UpdateGate
 from src.infra.postgres.gateways.base import UpdateReturningGate
 from src.infra.postgres.gateways.base import DeleteGate
 from src.infra.postgres.gateways.base import DeleteReturningGate
+from src.infra.postgres.gateways.base import GetAllGate
 
 TTable = TypeVar("TTable")
 TEntity = TypeVar("TEntity")
@@ -42,6 +43,19 @@ class PostgresProvider(Provider):
     ) -> AsyncIterator[AsyncSession]:
         async with AsyncSession(bind=engine) as session:
             yield session
+    
+    @provide
+    async def _get_all_gate(
+            self,
+            table: Type[TTable],
+            schema_type: Type[TEntity],
+            session: AsyncSession,
+    ) -> GetAllGate[TTable, TEntity]:
+        return GetAllGate(
+            session=session,
+            table=table,
+            schema_type=schema_type,
+        )
 
     @provide
     async def _get_all_by_id_user_gate(

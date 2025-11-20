@@ -6,8 +6,11 @@ from src.application.schemas.cards import CardSchema
 from src.usecase.cards.delete import DeleteCardUsecase
 from src.usecase.cards.schemas import GetUpdateCardsSchema
 from src.usecase.cards.update import UpdateCardUsecase
+
 from src.usecase.cards.get_all import GetAllCardsUsecase
 from src.usecase.cards.schemas import PaginationSchema, CardsSchema
+from src.usecase.cards.create import CreateCardsUsecase
+from src.usecase.cards.schemas import CreateManyCardsSchema
 from uuid import UUID
 
 ROUTER = APIRouter(route_class=DishkaRoute, )
@@ -30,3 +33,10 @@ async def update_card(
     usecase: FromDishka[UpdateCardUsecase],
     card: GetUpdateCardsSchema) -> CardSchema:
     return await usecase(card)
+
+@ROUTER.post('', status_code=status.HTTP_200_OK)
+async def create_cards(
+    usecase: FromDishka[CreateCardsUsecase],
+    cards: CreateManyCardsSchema
+) -> list[CardSchema]:
+    return await usecase(cards.cards)
