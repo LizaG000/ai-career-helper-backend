@@ -126,7 +126,6 @@ class UpdateReturningGate(Generic[TTable, TUpdate, TEntityId, TEntity], Postgres
 class DeleteGate(Generic[TTable, TEntityId], PostgresGateway):
     table: Type[TTable]
     entity_id: Type[TEntityId]
-    schema_type: Type[TEntity]
 
     async def __call__(self, entity_id: TEntityId) -> None:
         stmt = delete(self.table).where(self.table.id==entity_id)
