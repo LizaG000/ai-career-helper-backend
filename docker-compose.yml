@@ -2,16 +2,13 @@ version: "3.3"
 
 services:
   backend:
-    build:
-      context: ..
-      dockerfile: ./deploy/Dockerfile
+    image: ghcr.io/lizag000/ai-career-helper-backend:pr-8
     environment:
-      CONFIG_PATH: /app/configs/config.toml
+      CONFIG_PATH: /app/deploy/configs/config.toml
     ports:
       - "8000:8000"
     volumes:
-      - ../src:/app/src:ro
-      - ../src/infra/postgres/migration/versions:/app/src/infra/postgres/migration/versions:rw
+      - ./config.toml:/app/deploy/configs/config.toml:ro
 
   database:
     image: postgres:15.2
