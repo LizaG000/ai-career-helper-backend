@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from sqlalchemy import select, func, literal
 from sqlalchemy import func, over
 from  src.usecase.cards.schemas import CardsSchema
+from loguru import logger
 
 @dataclass(slots=True, kw_only=True)
 class GetCardsGate(PostgresGateway):
@@ -17,7 +18,10 @@ class GetCardsGate(PostgresGateway):
                 CardsModel.information_id,
                 InformationsModel.created_at.label('info_created_at'),
                 func.row_number().over(
-                    order_by=CardsModel.created_at
+                    order_by=(
+                        InformationsModel.created_at.desc(),
+                        CardsModel.created_at
+                    )
                 ).label('global_card_num')
             )
             .join(InformationsModel, InformationsModel.id == CardsModel.information_id)
@@ -33,8 +37,8 @@ class GetCardsGate(PostgresGateway):
                 numbered_cards.c.information_id,
                 numbered_cards.c.info_created_at
             )
-            .where(numbered_cards.c.global_card_num <= limit + offset)
-            .where(numbered_cards.c.global_card_num > offset)
+            .where(numbered_cards.c.global_card_num <= limit + offset * (limit-1))
+            .where(numbered_cards.c.global_card_num > offset * limit)
             .subquery()
         )
 
@@ -66,6 +70,7 @@ class GetCardsGate(PostgresGateway):
         )
 
         results = (await self.session.execute(stmt)).mappings().fetchall()
+        logger.info(results)
         if results == []:
             return results
         return [CardsSchema.model_validate(result) for result in results]

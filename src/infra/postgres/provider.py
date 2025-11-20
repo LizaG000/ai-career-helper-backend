@@ -1,6 +1,6 @@
 from collections.abc import AsyncIterator
 from typing import TypeVar, Type
-from dishka import Provider, Scope, provide
+from dishka import Provider, Scope, provide, provide_all
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from src.config import DatabaseConfig
 from loguru import logger
@@ -13,6 +13,7 @@ from src.infra.postgres.gateways.base import UpdateReturningGate
 from src.infra.postgres.gateways.base import DeleteGate
 from src.infra.postgres.gateways.base import DeleteReturningGate
 from src.infra.postgres.gateways.base import GetAllGate
+from src.infra.postgres.gateways.cards import GetCardsGate
 
 TTable = TypeVar("TTable")
 TEntity = TypeVar("TEntity")
@@ -174,3 +175,7 @@ class PostgresProvider(Provider):
             entity_id=entity_id,
             schema_type=schema_type,
         )
+
+    _get_gateways_ = provide_all(
+        GetCardsGate,
+    )
