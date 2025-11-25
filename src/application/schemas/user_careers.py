@@ -18,3 +18,11 @@ class CreateUserCareersSchema(BaseModel):
     experience_level: str
     skills: str
     career_goal: str
+
+class UpdateUserCareerSchema(BaseModel):
+    user_id: UUID
+    specialization_id: UUID|None
+    experience_level: str
+    skills: str
+    career_goal: str
+    updated_at: datetime
