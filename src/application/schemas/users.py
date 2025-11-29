@@ -18,3 +18,4 @@ class CreateUserSchema(BaseModel):
     phone: int
     email: str
     password: str
+
