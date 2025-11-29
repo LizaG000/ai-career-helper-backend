@@ -8,7 +8,7 @@ from src.usecase.cards.schemas import GetUpdateCardsSchema
 from src.usecase.cards.update import UpdateCardUsecase
 
 from src.usecase.cards.get_all import GetAllCardsUsecase
-from src.usecase.cards.schemas import PaginationSchema, CardsSchema
+from src.usecase.cards.schemas import PaginationSchema, ResponseCardsSchema
 from src.usecase.cards.create import CreateCardsUsecase
 from src.usecase.cards.schemas import CreateManyCardsSchema
 from uuid import UUID
@@ -25,7 +25,7 @@ async def delete_cards(
 async def get_cards(
     usecase: FromDishka[GetAllCardsUsecase],
     limit: int,
-    offset:int) -> list[CardsSchema]:
+    offset:int) -> ResponseCardsSchema:
     return await usecase(PaginationSchema(limit=limit, offset=offset))
 
 @ROUTER.put('', status_code=status.HTTP_200_OK)

@@ -10,6 +10,7 @@ class ApiConfig(BaseSchema):
     host: str = 'localhost'
     port: int = 8000
     project_name: str = 'base'
+    cors: list[str] = ["*"]
 
 class DatabaseConfig(BaseSchema):
     host: str

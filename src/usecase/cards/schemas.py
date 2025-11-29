@@ -18,6 +18,12 @@ class CardsSchema(BaseModel):
     created_at: datetime
     cards: list[CardSchema]
 
+class ResponseCardsSchema(BaseModel):
+    items: list[CardsSchema]
+    next: str|None = None
+    prev: str|None = None
+    total: int
+
 class PaginationSchema(BaseModel):
     limit: int
     offset: int
