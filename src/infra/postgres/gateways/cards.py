@@ -78,7 +78,6 @@ class GetCardsGate(PostgresGateway):
             prev = f"/cards?offset={offset - limit}&limit={limit}"
 
         results = (await self.session.execute(stmt)).mappings().fetchall()
-        logger.info(results)
         if results == []:
             return ResponseCardsSchema(items=[], total=0)
         return ResponseCardsSchema(

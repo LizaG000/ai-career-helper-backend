@@ -6,6 +6,7 @@ from src.application.schemas.cards import CardSchema
 from src.usecase.cards.delete import DeleteCardUsecase
 from src.usecase.cards.schemas import GetUpdateCardsSchema
 from src.usecase.cards.update import UpdateCardUsecase
+from src.usecase.cards.generate import GenerateCardsUsecase
 
 from src.usecase.cards.get_all import GetAllCardsUsecase
 from src.usecase.cards.schemas import PaginationSchema, ResponseCardsSchema
@@ -40,3 +41,9 @@ async def create_cards(
     cards: CreateManyCardsSchema
 ) -> list[CardSchema]:
     return await usecase(cards.cards)
+
+@ROUTER.post('/generate', status_code=status.HTTP_200_OK)
+async def generate_cards(
+    usecase: FromDishka[GenerateCardsUsecase],
+) -> list[CardSchema]:
+    return await usecase()
