@@ -17,6 +17,7 @@ from src.usecase.user_careers.create import CreateUserCareerUsecase
 from src.usecase.cards.get_all import GetAllCardsUsecase
 from src.usecase.cards.create import CreateCardsUsecase
 from src.usecase.cards.generate import GenerateCardsUsecase
+from src.usecase.user_careers.update import UpdateUserCareersUsecase
 
 class MainProvider(Provider):
     scope = Scope.REQUEST
@@ -44,6 +45,7 @@ class MainProvider(Provider):
         CreateUserCareerUsecase,
         GetAllCardsUsecase,
         CreateCardsUsecase,
-        GenerateCardsUsecase
+        GenerateCardsUsecase,
+        UpdateUserCareersUsecase
     )
 
