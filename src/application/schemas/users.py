@@ -1,6 +1,8 @@
-from uuid import UUID
 from datetime import datetime
+from uuid import UUID
+
 from src.application.schemas.common import BaseModel
+
 
 class UserSchemas(BaseModel):
     id: UUID
@@ -11,6 +13,7 @@ class UserSchemas(BaseModel):
     password: str
     created_at: datetime
     updated_at: datetime
+
 
 class CreateUserSchema(BaseModel):
     name: str

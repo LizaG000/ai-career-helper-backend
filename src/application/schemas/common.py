@@ -1,7 +1,4 @@
-from pydantic import AliasGenerator
-from pydantic import BaseModel
-from pydantic import ConfigDict
-from pydantic import alias_generators
+from pydantic import AliasGenerator, BaseModel, ConfigDict, alias_generators
 
 
 class BaseSchema(BaseModel):

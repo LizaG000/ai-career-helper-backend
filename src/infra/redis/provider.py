@@ -1,8 +1,10 @@
 from collections.abc import AsyncIterator
+
 from dishka import Provider, Scope, provide
-from redis.asyncio import Redis
-from src.config import RedisConfig
 from loguru import logger
+from redis.asyncio import Redis
+
+from src.config import RedisConfig
 
 
 class RedisProvider(Provider):
@@ -11,10 +13,12 @@ class RedisProvider(Provider):
     @provide(scope=Scope.APP)
     async def _get_redis_client(self, config: RedisConfig | None) -> AsyncIterator[Redis | None]:
         if config is None:
-            logger.warning("Redis configuration is not provided, Redis client will not be available")
+            logger.warning(
+                "Redis configuration is not provided, Redis client will not be available"
+            )
             yield None
             return
-        
+
         client: Redis | None = None
         try:
             client = Redis(
@@ -34,4 +38,3 @@ class RedisProvider(Provider):
         finally:
             if client is not None:
                 await client.aclose()
-
