@@ -1,13 +1,12 @@
-from fastapi import FastAPI
 from dishka.integrations.fastapi import setup_dishka
-from src.main.config import config
-from src.presentation.fastapi.setup import setup_routes
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.main.container import container
 
-app = FastAPI(
-    title=config.api.project_name
-)
+from src.main.config import config
+from src.main.container import container
+from src.presentation.fastapi.setup import setup_routes
+
+app = FastAPI(title=config.api.project_name)
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,39 +1,41 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import UUID
-from sqlalchemy import String
-from sqlalchemy import Boolean
-from sqlalchemy import Integer
-from sqlalchemy import Text
-from sqlalchemy import DateTime
-from sqlalchemy import func
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from typing import Annotated
 
-uuid_pk = Annotated[uuid.UUID, mapped_column(
+from sqlalchemy import UUID, Boolean, DateTime, ForeignKey, Integer, String, Text, func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+uuid_pk = Annotated[
+    uuid.UUID,
+    mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
         nullable=False,
         default=uuid.uuid4,
-    )]
+    ),
+]
 
-created_at = Annotated[datetime, mapped_column(
-    DateTime(timezone=True),
-    default=func.now(), 
-    nullable=False,
+created_at = Annotated[
+    datetime,
+    mapped_column(
+        DateTime(timezone=True),
+        default=func.now(),
+        nullable=False,
+    ),
+]
+updated_at = Annotated[
+    datetime,
+    mapped_column(
+        DateTime(timezone=True),
+        default=func.now(),
+        nullable=False,
+    ),
+]
 
-)]
-updated_at = Annotated[datetime, mapped_column(
-    DateTime(timezone=True),
-    default=func.now(), 
-    nullable=False,
-
-)]
 
 class BaseDBModel(DeclarativeBase):
     __tablename__: str
-    __table_args__: dict[str, str] | tuple = {'schema': 'db_schema'}
+    __table_args__: dict[str, str] | tuple = {"schema": "db_schema"}
 
     @classmethod
     def group_by_fields(cls, exclude: list[str] | None = None) -> list:
@@ -49,58 +51,37 @@ class BaseDBModel(DeclarativeBase):
 
         return payload
 
+
 class UserModel(BaseDBModel):
-    __tablename__ = 'users'
+    __tablename__ = "users"
     id: Mapped[uuid_pk]
-    email: Mapped[str] = mapped_column(
-        String(200),
-        nullable=False
-    )
-    first_name: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True
-    )
-    corporate_account_id: Mapped[uuid.UUID] = mapped_column(
-        UUID,
-        nullable=True
-    )
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False
-    )
-    
+    email: Mapped[str] = mapped_column(String(200), nullable=False)
+    first_name: Mapped[str] = mapped_column(String(255), nullable=True)
+    corporate_account_id: Mapped[uuid.UUID] = mapped_column(UUID, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False)
+
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
+
 class UserCareersModel(BaseDBModel):
-    __tablename__ = 'user_careers'
+    __tablename__ = "user_careers"
     id: Mapped[uuid_pk]
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID,
         nullable=False,
     )
-    specialization_id: Mapped[uuid.UUID] = mapped_column(
-        UUID,
-        nullable=False
-    )
-    experience_level: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False
-    )
-    skills: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True
-    )
-    career_goal: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True
-    )
-    
+    specialization_id: Mapped[uuid.UUID] = mapped_column(UUID, nullable=False)
+    experience_level: Mapped[str] = mapped_column(String(255), nullable=False)
+    skills: Mapped[str] = mapped_column(String(255), nullable=True)
+    career_goal: Mapped[str] = mapped_column(String(255), nullable=True)
+
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
+
 class UserResumeModel(BaseDBModel):
-    __tablename__ = 'user_resume'
+    __tablename__ = "user_resume"
     id: Mapped[uuid_pk]
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID,
@@ -125,8 +106,9 @@ class UserResumeModel(BaseDBModel):
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
+
 class SpecializationsModel(BaseDBModel):
-    __tablename__ = 'specializations'
+    __tablename__ = "specializations"
     id: Mapped[uuid_pk]
     name: Mapped[str] = mapped_column(
         String(255),
@@ -135,10 +117,11 @@ class SpecializationsModel(BaseDBModel):
 
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
-    '''timestamp'''
+    """timestamp"""
+
 
 class RoadmapsModel(BaseDBModel):
-    __tablename__ = 'roadmaps'
+    __tablename__ = "roadmaps"
     id: Mapped[uuid_pk]
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID,
@@ -159,13 +142,14 @@ class RoadmapsModel(BaseDBModel):
 
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
-    '''timestamp
+    """timestamp
     start_date: Mapped[start_date]
     estmated_end_date: Mapped[estmated_end_date]
-    DATE'''
+    DATE"""
+
 
 class RoadmapStatusModel(BaseDBModel):
-    __tablename__ = 'roadmap_status'
+    __tablename__ = "roadmap_status"
     id: Mapped[uuid_pk]
     is_completed: Mapped[bool] = mapped_column(
         Boolean,
@@ -173,10 +157,11 @@ class RoadmapStatusModel(BaseDBModel):
     )
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
-    '''timestamp'''
+    """timestamp"""
+
 
 class RoadMapStepsModel(BaseDBModel):
-    __tablename__ = 'roadmapsteps'
+    __tablename__ = "roadmapsteps"
     id: Mapped[uuid_pk]
     roadmap_id: Mapped[uuid.UUID] = mapped_column(
         UUID,
@@ -209,113 +194,68 @@ class RoadMapStepsModel(BaseDBModel):
 
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
-    '''timestamp'''
-
+    """timestamp"""
 
 
 class InformationsModel(BaseDBModel):
-    __tablename__ = 'informations'
+    __tablename__ = "informations"
     id: Mapped[uuid_pk]
-    title: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True
-    )
+    title: Mapped[str] = mapped_column(String(255), nullable=True)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
 
 class CardsModel(BaseDBModel):
-    __tablename__ = 'cards'
+    __tablename__ = "cards"
     id: Mapped[uuid_pk]
     information_id: Mapped[uuid.UUID] = mapped_column(
         UUID,
-        ForeignKey('db_schema.informations.id'),
+        ForeignKey("db_schema.informations.id"),
         nullable=False,
     )
-    title: Mapped[str] = mapped_column(
-        String(255),
-        nullable=True
-    )
-    description: Mapped[str] = mapped_column(
-        Text,
-        nullable=True
-    )
+    title: Mapped[str] = mapped_column(String(255), nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
 
 class FavoritesModel(BaseDBModel):
-    __tablename__ = 'favorites'
-    id: Mapped[uuid_pk] = mapped_column(
-        UUID,
-        nullable=False
-    )
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey('db_schema.users.id'),
-        nullable=False
-    )
-    card_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey('db_schema.cards.id'),
-        nullable=False
-    )
+    __tablename__ = "favorites"
+    id: Mapped[uuid_pk] = mapped_column(UUID, nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("db_schema.users.id"), nullable=False)
+    card_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("db_schema.cards.id"), nullable=False)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
 
 class ChatsModel(BaseDBModel):
-    __tablename__ = 'chats'
-    id: Mapped[uuid_pk] 
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey('db_schema.users.id'),
-        nullable=False
-    )
-    title: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False
-    )
-    start_time: Mapped[datetime] = mapped_column(
-        DateTime,  
-        nullable=False
-    )
-    last_activity_time: Mapped[datetime] = mapped_column(  
-        DateTime,
-        nullable=False
-    )
+    __tablename__ = "chats"
+    id: Mapped[uuid_pk]
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("db_schema.users.id"), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    start_time: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    last_activity_time: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
 
 class MessagesModel(BaseDBModel):
-    __tablename__ = 'messages'
-    id: Mapped[uuid_pk]  
-    chat_id: Mapped[uuid.UUID] = mapped_column(  
-        ForeignKey('db_schema.chats.id'),
-        nullable=False
+    __tablename__ = "messages"
+    id: Mapped[uuid_pk]
+    chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("db_schema.chats.id"), nullable=False)
+    message_text: Mapped[str] = mapped_column(Text, nullable=False)
+    sender_type_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("db_schema.sender_types.id"), nullable=False
     )
-    message_text: Mapped[str] = mapped_column(  
-        Text,
-        nullable=False
-    )
-    sender_type_id: Mapped[uuid.UUID] = mapped_column(  
-        ForeignKey('db_schema.sender_types.id'),
-        nullable=False
-    )
-    timestamp: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False
-    )
-    token_id: Mapped[int] = mapped_column(  
-        nullable=True  
-    )
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    token_id: Mapped[int] = mapped_column(nullable=True)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
-class SenderTypesModel(BaseDBModel):  
-    __tablename__ = 'sender_types'
+
+class SenderTypesModel(BaseDBModel):
+    __tablename__ = "sender_types"
     id: Mapped[uuid_pk]
-    name: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False
-    )
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]

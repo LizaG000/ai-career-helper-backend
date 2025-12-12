@@ -9,6 +9,8 @@ readme = "README.md"
 requires-python = ">=3.10,<4.0"
 package-mode = false 
 dependencies = [
+    "ruff>=0.12.0",
+    "pre-commit>=4.0.0",	
     "annotated-types>=0.7.0",
     "anyio>=4.9.0",
     "dynaconf>=3.2.11",
@@ -41,3 +43,16 @@ dependencies = [
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B904", "E722", "F403", "F405"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+

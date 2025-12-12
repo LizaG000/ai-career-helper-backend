@@ -1,6 +1,8 @@
-from uuid import UUID
 from datetime import datetime
+from uuid import UUID
+
 from src.application.schemas.common import BaseModel
+
 
 class InformationSchema(BaseModel):
     id: UUID
@@ -11,4 +13,3 @@ class InformationSchema(BaseModel):
 
 class CreateInformationSchema(BaseModel):
     title: str
-

@@ -1,8 +1,10 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.usecase.base import Usecase
-from src.infra.postgres.gateways.cards import GetCardsGate
-from src.usecase.cards.schemas import ResponseCardsSchema, PaginationSchema
 from dataclasses import dataclass
+
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.infra.postgres.gateways.cards import GetCardsGate
+from src.usecase.base import Usecase
+from src.usecase.cards.schemas import PaginationSchema, ResponseCardsSchema
 
 
 @dataclass(slots=True, frozen=True, kw_only=True)

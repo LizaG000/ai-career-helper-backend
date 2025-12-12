@@ -1,9 +1,8 @@
 from abc import abstractmethod
-from typing import Protocol
-from typing import TypeVar
+from typing import Protocol, TypeVar
 
-TInputDTO = TypeVar('TInputDTO', contravariant=True)
-TOutputDTO = TypeVar('TOutputDTO', covariant=True)
+TInputDTO = TypeVar("TInputDTO", contravariant=True)
+TOutputDTO = TypeVar("TOutputDTO", covariant=True)
 
 
 class Usecase(Protocol[TInputDTO, TOutputDTO]):
