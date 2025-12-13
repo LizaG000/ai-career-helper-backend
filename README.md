@@ -105,6 +105,47 @@
 
 ------------------------------------------------------------------------------------------------------------
 
+Очередь задач (TaskIQ)
+
+- Убедись, что в `deploy/configs/config.toml` есть блок `redis` (по умолчанию `host=redis`, `port=6379`, `db=0` из docker-compose).
+- При `make compose` поднимается отдельный контейнер `taskiq-worker`, который сам запускает воркер очереди.
+- Локально без Docker можно запустить воркер вручную (из корня репозитория):
+  ```
+  poetry run taskiq worker src.infra.taskiq.tasks:broker
+  ```
+- Ручка для постановки задач: `POST /api/cards/tasks` со следующей формой запроса:
+  - `usecase`: один из `create_cards`, `update_card`, `delete_card`, `generate_cards`, `get_all_cards`
+  - `payload`: параметры для выбранного юзкейса.
+- Примеры запросов:
+  - Создание карточек
+    ```
+    {
+      "usecase": "create_cards",
+      "payload": {
+        "cards": [
+          {
+            "information_title": "Python",
+            "title": "PEP 8",
+            "description": "Style guide."
+          }
+        ]
+      }
+    }
+    ```
+  - Удаление карточки
+    ```
+    {
+      "usecase": "delete_card",
+      "payload": { "id": "uuid-card-id" }
+    }
+    ```
+  - Генерация предзагруженных карточек
+    ```
+    { "usecase": "generate_cards" }
+    ```
+
+------------------------------------------------------------------------------------------------------------
+
 ❗️ Как отправлять Pull Request 
 
 1. Клонируем репозиторий

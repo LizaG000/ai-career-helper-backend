@@ -13,6 +13,19 @@ services:
       - ../src:/app/src:ro
       - ../src/infra/postgres/migration/versions:/app/src/infra/postgres/migration/versions:rw
 
+  taskiq-worker:
+    build:
+      context: ..
+      dockerfile: ./deploy/Dockerfile
+    command: poetry run taskiq worker src.infra.taskiq.tasks:broker
+    environment:
+      CONFIG_PATH: /app/configs/config.toml
+    depends_on:
+      - database
+      - redis
+    volumes:
+      - ../src:/app/src:ro
+
   database:
     image: postgres:15.2
     restart: always
@@ -50,4 +63,3 @@ volumes:
   pgdata:
   pgadmin_data:
   redis_data:
-
