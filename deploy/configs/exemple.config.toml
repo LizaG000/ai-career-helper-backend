@@ -9,3 +9,8 @@ port=5432
 username='postgres'
 password='postgres'
 database='postgres'
+
+[redis]
+host='redis'
+port=6379
+db=0

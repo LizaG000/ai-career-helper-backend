@@ -34,7 +34,9 @@ dependencies = [
     "psycopg (>=3.2.9,<4.0.0)",
     "psycopg-binary (>=3.2.9,<4.0.0)",
     "redis (>=5.0.0,<6.0.0)",
-    "sqlalchemy (>=2.0.41,<3.0.0)"
+    "sqlalchemy (>=2.0.41,<3.0.0)",
+    "taskiq (>=0.11.0,<1.0.0)",
+    "taskiq-redis (>=0.5.0,<1.0.0)"
 ]
 
 

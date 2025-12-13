@@ -1,8 +1,12 @@
 from dishka.integrations.fastapi import DishkaRoute
 from dishka.integrations.fastapi import FromDishka
 from fastapi import APIRouter
+from fastapi import HTTPException
 from fastapi import status
+from loguru import logger
 from src.application.schemas.cards import CardSchema
+from src.application.schemas.tasks import CardTaskRequest, CardTaskResponse
+from src.infra.taskiq.tasks import enqueue_card_task
 from src.usecase.cards.delete import DeleteCardUsecase
 from src.usecase.cards.schemas import GetUpdateCardsSchema
 from src.usecase.cards.update import UpdateCardUsecase
@@ -41,6 +45,24 @@ async def create_cards(
     cards: CreateManyCardsSchema
 ) -> list[CardSchema]:
     return await usecase(cards.cards)
+
+@ROUTER.post('/tasks', status_code=status.HTTP_202_ACCEPTED)
+async def create_card_task(
+    request: CardTaskRequest,
+) -> CardTaskResponse:
+    try:
+        return await enqueue_card_task(request)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Failed to enqueue card task: {}", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to enqueue task",
+        )
 
 @ROUTER.post('/generate', status_code=status.HTTP_200_OK)
 async def generate_cards(
