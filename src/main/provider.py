@@ -9,6 +9,7 @@ from src.config import Config
 from src.config import ApiConfig
 from src.config import DatabaseConfig
 from src.config import RedisConfig
+from src.config import GigachatConfig
 
 from src.usecase.users.create import CreateUserUsecase
 from src.usecase.cards.delete import DeleteCardUsecase
@@ -17,6 +18,8 @@ from src.usecase.user_careers.create import CreateUserCareerUsecase
 from src.usecase.cards.get_all import GetAllCardsUsecase
 from src.usecase.cards.create import CreateCardsUsecase
 from src.usecase.cards.generate import GenerateCardsUsecase
+from src.usecase.message.create import MessengerUsecase
+from src.usecase.chats.create import CreateChatUsecase
 
 class MainProvider(Provider):
     scope = Scope.REQUEST
@@ -35,6 +38,10 @@ class MainProvider(Provider):
     async def _get_redis_config(self, config: Config) -> RedisConfig | None:
         return config.redis
 
+
+    @provide(scope=Scope.APP)
+    async def _get_gigachat_config(self, config: Config) -> GigachatConfig | None:
+        return config.gigachat
     _request = from_context(provides=Request, scope=Scope.REQUEST)
 
     _get_usecases = provide_all(
@@ -44,6 +51,8 @@ class MainProvider(Provider):
         CreateUserCareerUsecase,
         GetAllCardsUsecase,
         CreateCardsUsecase,
-        GenerateCardsUsecase
+        GenerateCardsUsecase,
+        MessengerUsecase,
+        CreateChatUsecase,
     )
 
