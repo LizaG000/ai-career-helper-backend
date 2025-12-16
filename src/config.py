@@ -31,11 +31,17 @@ class RedisConfig(BaseSchema):
     db: int = 0
     decode_responses: bool = True
 
+class GigachatConfig(BaseSchema):
+    client_id: str
+    scope: str
+    authorization_key: str
+
 class Config(BaseSchema):
     model_config = ConfigDict(extra='allow', from_attributes=True)
     api: ApiConfig
     database: DatabaseConfig
     redis: RedisConfig | None = None
+    gigachat: GigachatConfig
 
 
 def get_config() -> Config:

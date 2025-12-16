@@ -1,15 +1,17 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from src.usecase.base import Usecase
-from src.infra.postgres.gateways.base import CreateGate
-from src.application.schemas.users import CreateUserSchema
+from uuid import UUID
+from src.infra.postgres.gateways.base import CreateGate, GetByIdGate
+from src.application.schemas.users import CreateUserSchema, UserSchemas
 from src.infra.postgres.tables import UserModel
 from dataclasses import dataclass
 
 @dataclass(slots=True, frozen=True, kw_only=True)
 class CreateUserUsecase(Usecase[CreateUserSchema, None]):
-    session: AsyncSession
     create_user: CreateGate[UserModel, CreateUserSchema]
+    get_user: GetByIdGate[UserModel, UUID, UserSchemas]
     
     async def __call__(self, data: CreateUserSchema) -> None:
-        async with self.session.begin():
+        try:
+            await self.get_user(data.id)
+        except:
             await self.create_user(data)
