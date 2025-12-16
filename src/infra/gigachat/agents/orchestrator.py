@@ -1,14 +1,14 @@
-from src.infra.gigachat.base import BaseAgent
 from src.usecase.message.schemas import RequestMessageSchema
 from src.infra.gigachat.agents.career import CareerAgent
 from src.infra.gigachat.agents.learning import LearningAgent
+from dataclasses import dataclass
 
-class OrchestratorAgent(BaseAgent):
+
+@dataclass(slots=True, frozen=True, kw_only=True)
+class OrchestratorAgent():
     career_agent: CareerAgent
     learning_agent: LearningAgent
 
-    def __init__(self):
-        super().__init__("orchestrator", [])
 
     async def __call__(self, data: RequestMessageSchema) -> str:
         q = data.text.lower()
@@ -47,10 +47,10 @@ class OrchestratorAgent(BaseAgent):
 
         if career_score > learning_score:
             # тут таску надо регистирировать в редис
-            response = await  self.career_agent(data.text)
+            response = await  self.career_agent(data)
             return response
         else:
             # тут таску надо регистирировать в редис
             # если примерно одинаково — по умолчанию считаем, что это про обучение
-            response = await self.learning_agent(data.text)
+            response = await self.learning_agent(data)
             return response

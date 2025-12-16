@@ -1,29 +1,32 @@
 import pdfplumber
-from src.infra.gigachat.base import BaseAgent
+from src.infra.gigachat.chat import Gigachat
 from io import BytesIO
+from dataclasses import dataclass
+from src.usecase.message.schemas import RequestMessageSchema
 
-class LearningAgent(BaseAgent):
-    def __init__(self):
-        tools = [
-            self.create_roadmap_tool,
-            self.recommend_materials_tool,
-            self.explain_concept_tool,
-            self.extract_pdf_text_tool,
-        ]
-        super().__init__("learning_agent", tools)
+@dataclass(slots=True, frozen=True, kw_only=True)
+class LearningAgent():
+    chat: Gigachat
 
-    def extract_pdf_text_tool(self, pdf: bytes) -> str:
-        """Извлекает текст из PDF файла"""
+    def extract_pdf_text_tool(self, pdf_bytes: bytes) -> str:
+        """Извлекает текст из PDF файла, переданного в виде байтов"""
         try:
             text = ""
-            with pdfplumber.open(pdf) as pdf:
-                for page in pdf.pages:
-                    text += page.extract_text() or ""
-            return text[:2000]
+            # Используем BytesIO для работы с байтами
+            with BytesIO(pdf_bytes) as byte_stream:
+                with pdfplumber.open(byte_stream) as pdf:
+                    for page in pdf.pages:
+                        extracted_text = page.extract_text()
+                        if extracted_text:
+                            text += extracted_text + "\n"
+
+            # Возвращаем первые 2000 символов или весь текст, если он короче
+            return text[:2000] if text else "Не удалось извлечь текст из PDF"
+
         except Exception as e:
             return f"Ошибка при чтении PDF: {str(e)}"
 
-    def create_roadmap_tool(self, profession: str,) -> str:
+    async def create_roadmap_tool(self, profession: str,) -> str:
         """Создает образовательный roadmap"""
         prompt = f"""
         Изучи запрос пользователя и определи из его запроса на какой срок будет создаваться учебный план.
@@ -40,10 +43,10 @@ class LearningAgent(BaseAgent):
         Сделай roadmap практичным и достижимым.
         """
 
-        response = self.model.chat(prompt)
-        return response.choices[0].message.content
+        response = await self.chat(prompt)
+        return response
 
-    def recommend_materials_tool(self, topic: str, level: str = "beginner") -> str:
+    async def recommend_materials_tool(self, topic: str, level: str = "beginner") -> str:
         """Рекомендует обучающие материалы"""
         prompt = f"""
         Подбери рекомендации обучающих материалов по теме {topic} для уровня {level}.
@@ -59,10 +62,10 @@ class LearningAgent(BaseAgent):
         Укажи примерное время на освоение каждого ресурса.
         """
 
-        response = self.model.chat(prompt)
-        return response.choices[0].message.content
+        response = await self.chat(prompt)
+        return response
 
-    def explain_concept_tool(self, concept: str, explanation_level: str = "новичок") -> str:
+    async def explain_concept_tool(self, concept: str, explanation_level: str = "новичок") -> str:
         """Объясняет сложные концепции простым языком"""
         prompt = f"""
         Объясни концепцию {concept} для уровня {explanation_level}.
@@ -76,18 +79,18 @@ class LearningAgent(BaseAgent):
         Избегай сложной терминологии, объясняй как для новичка.
         """
 
-        response = self.model.chat(prompt)
-        return response.choices[0].message.content
+        response =await self.chat(prompt)
+        return response
 
 
-    async def __call__(self, query: str):
-        q = query.lower()
+    async def __call__(self, data: RequestMessageSchema):
+        q = data.text.lower()
         if "roadmap" in q or "дорожн" in q or "план" in q:
-            resp_text = self.create_roadmap_tool(profession=query)
+            resp_text = await self.create_roadmap_tool(profession=data.text)
 
         elif "объясн" in q or "концепц" in q:
-            resp_text = self.explain_concept_tool(concept=query)
+            resp_text = await self.explain_concept_tool(concept=data.text)
 
         else:
-            resp_text = self.chat(query)
+            resp_text = await self.chat(data.text)
         return resp_text

@@ -298,8 +298,9 @@ class MessagesModel(BaseDBModel):
         Text,
         nullable=False
     )
-    sender_type_id: Mapped[uuid.UUID] = mapped_column(  
-        ForeignKey('db_schema.sender_types.id'),
+    sender_type_id: Mapped[str] = mapped_column(
+        String(255),
+        ForeignKey('db_schema.sender_types.name'),
         nullable=False
     )
     created_at: Mapped[created_at]
@@ -307,10 +308,8 @@ class MessagesModel(BaseDBModel):
 
 class SenderTypesModel(BaseDBModel):  
     __tablename__ = 'sender_types'
-    id: Mapped[uuid_pk]
     name: Mapped[str] = mapped_column(
         String(255),
+        primary_key=True,
         nullable=False
     )
-    created_at: Mapped[created_at]
-    updated_at: Mapped[updated_at]

@@ -6,11 +6,11 @@ class MessageSchemas(BaseModel):
     id: UUID
     chat_id: UUID
     text: str
-    sender_type_id: UUID
+    sender_type_id: str
     created_at: datetime
     updated_at: datetime
 
 class CreateMessageSchema(BaseModel):
     chat_id: UUID
     text: str
-    sender_type_id: UUID
+    sender_type_id: str

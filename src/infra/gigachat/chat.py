@@ -1,15 +1,16 @@
+from asyncio import timeout
 from typing import Dict, Any, List, Optional
 from gigachat import GigaChat, GigaChatAsyncClient
+from gigachat.models import Chat, Messages, MessagesRole
 from src.main.config import config
+from loguru import logger
 
 
-class BaseAgent:
-    def __init__(self, name: str, tools: List[Any]):
-        self.name = name
-        self.tools = tools
-        self.model = GigaChat(credentials=config.gigachat.authorization_key, verify_ssl_certs=False)
+class Gigachat:
+    def __init__(self,):
+        self.model = GigaChatAsyncClient(credentials=config.gigachat.authorization_key, verify_ssl_certs=False)
 
-    def chat(self, user_query: str, history: Optional[List[Dict[str, str]]] = None) -> str:
+    async def __call__(self, user_query: str, history: Optional[List[Dict[str, str]]] = None) -> str:
         if history:
             hist_text = ""
             # Берём только последние N сообщений, чтобы не раздуть контекст
@@ -24,6 +25,14 @@ class BaseAgent:
             )
         else:
             prompt = user_query
+        logger.info(33)
+        messages = []
+        messages.append(Messages(role=MessagesRole.USER, content=prompt))
 
-        resp = self.model.chat(prompt)
+
+        resp = await self.model.achat(
+            Chat(messages=messages),
+        )
+        logger.info(resp)
+
         return resp.choices[0].message.content

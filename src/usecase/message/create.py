@@ -23,12 +23,12 @@ class MessengerUsecase(Usecase[RequestMessageSchema, MessageSchemas]):
             await self.create_message(CreateMessageSchema(
                 chat_id=data.chat_id,
                 text=data.text,
-                sender_type_id=UUID("c2a9e7f1-5b83-4d2c-91a6-8f3b0c4d5e6f")
+                sender_type_id="user"
             ))
             answer = await self.orchestrator(data=data)
 
             return await self.create_message(CreateMessageSchema(
                 chat_id=data.chat_id,
                 text=answer,
-                sender_type_id=UUID("9d8a2b7c-4e1f-4a3d-85c9-0b6a1e3f8d2c")
+                sender_type_id="chat"
             ))
