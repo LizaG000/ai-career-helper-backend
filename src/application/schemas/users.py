@@ -15,3 +15,4 @@ class CreateUserSchema(BaseModel):
     first_name: str
     email: str
     corporate_account_id: UUID|None
+    is_active: bool
