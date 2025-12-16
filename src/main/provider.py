@@ -20,6 +20,9 @@ from src.usecase.cards.create import CreateCardsUsecase
 from src.usecase.cards.generate import GenerateCardsUsecase
 from src.usecase.message.create import MessengerUsecase
 from src.usecase.chats.create import CreateChatUsecase
+from src.usecase.chats.get import GetChatUsecase
+from src.usecase.chats.get_all import GetAllChatUsecase
+from src.usecase.systems.pagination import Pagination
 
 class MainProvider(Provider):
     scope = Scope.REQUEST
@@ -54,5 +57,8 @@ class MainProvider(Provider):
         GenerateCardsUsecase,
         MessengerUsecase,
         CreateChatUsecase,
+        GetChatUsecase,
+        Pagination,
+        GetAllChatUsecase,
     )
 

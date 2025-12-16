@@ -14,6 +14,7 @@ from src.application.errors import (
     DatabaseDeleteError,
     NotFoundError,
 )
+from loguru import logger
 
 TAppliable = Select | ReturningInsert | ReturningUpdate
 
@@ -45,8 +46,8 @@ class GetAllByIdUserGate(Generic[TTable, TEntity, TEntityId], PostgresGateway):
     schema_type: Type[TEntity]
     entity_id: Type[TEntityId]
 
-    async def __call__(self, id_user = TEntityId) -> list[TEntity] | list[None]:
-        stmt = Select(*self.table.group_by_fields()).where(self.table.id_user == id_user)
+    async def __call__(self, user_id: TEntityId) -> list[TEntity] | list[None]:
+        stmt = Select(*self.table.group_by_fields()).where(self.table.user_id == user_id)
         results = (await self.session.execute(stmt)).mappings().fetchall()
         if results == []:
             return  results
@@ -58,12 +59,13 @@ class GetByIdGate(Generic[TTable, TEntityId, TEntity], PostgresGateway):
     schema_type: Type[TEntity]
     entity_id: Type[TEntityId]
 
-    async def __call__(self, id = TEntityId) -> TEntity:
-        stmt = select(*self.table.group_by_fields()).where(self.table.id == id)
+    async def __call__(self, id: TEntityId) -> TEntity:
+        stmt = Select(*self.table.group_by_fields()).where(self.table.id == id)
         result = (await self.session.execute(stmt)).mappings().fetchone()
-        print(result)
+        logger.info(result)
         if result is None:
             raise  NotFoundError(self.table)
+        logger.info(result)
         return self.schema_type.model_validate(result)
 
 @dataclass(slots=True, kw_only=True)
@@ -86,8 +88,14 @@ class CreateReturningGate(Generic[TTable, TCreate, TEntity], PostgresGateway):
 
     async def __call__(self, entity: TCreate) -> TEntity:
         stmt = insert(self.table).values(**entity.model_dump()).returning(self.table)
+
+        result = (await self.session.execute(stmt)).scalar_one().__dict__
+        logger.info(result)
+        return self.schema_type.model_validate(result)
         try:
+            logger.info(stmt)
             result = (await self.session.execute(stmt)).scalar_one().__dict__
+            logger.info(result)
             return self.schema_type.model_validate(result)
         except:
             raise DatabaseCreateError(self.table)

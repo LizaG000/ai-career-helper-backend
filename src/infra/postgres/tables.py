@@ -287,7 +287,7 @@ class ChatModel(BaseDBModel):
     updated_at: Mapped[updated_at]
 
 
-class MessagesModel(BaseDBModel):
+class MessageModel(BaseDBModel):
     __tablename__ = 'messages'
     id: Mapped[uuid_pk]  
     chat_id: Mapped[uuid.UUID] = mapped_column(  

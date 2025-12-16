@@ -2,9 +2,9 @@ from pydantic import BaseModel, Field, field_validator
 from uuid import UUID
 
 class AuthSchema(BaseModel):
-    user_id: UUID = Field(alias="sub")
+    id: UUID = Field(alias="sub")
 
-    @field_validator('user_id', mode='before')
+    @field_validator('id', mode='before')
     def convert_string_to_uuid(cls, v):
         if isinstance(v, str):
             try:

@@ -14,6 +14,7 @@ from src.infra.postgres.gateways.base import DeleteGate
 from src.infra.postgres.gateways.base import DeleteReturningGate
 from src.infra.postgres.gateways.base import GetAllGate
 from src.infra.postgres.gateways.cards import GetCardsGate
+from src.infra.postgres.gateways.chats import GetChatGate
 
 TTable = TypeVar("TTable")
 TEntity = TypeVar("TEntity")
@@ -178,4 +179,5 @@ class PostgresProvider(Provider):
 
     _get_gateways_ = provide_all(
         GetCardsGate,
+        GetChatGate,
     )

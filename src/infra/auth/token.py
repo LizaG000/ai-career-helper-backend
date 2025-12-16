@@ -7,7 +7,6 @@ class TokenParser:
     async def __call__(self, token: str) -> AuthSchema:
         async with AsyncClient(timeout=30.0) as client:
             headers = {"Authorization": token}
-            logger.info(headers)
             response = await client.get("http://auth-pd.tw1.ru/api/jwt/validate", headers=headers)
             r = response.json()
             return AuthSchema.model_validate(r["jwt"])
