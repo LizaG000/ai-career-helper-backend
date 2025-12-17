@@ -18,3 +18,7 @@ class CreateUserSchema(BaseModel):
     phone: int
     email: str
     password: str
+
+class UpdateUserSchema(BaseModel):
+    first_name: str
+    updated_at: datetime
